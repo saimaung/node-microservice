@@ -1,24 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
 
 const router = express.Router();
 
 // ADMIN related routes live in this file
+const adminController = require('../controllers/admin');
 
 // this will call next() to propagate down to all middleware
 router.use(bodyParser.urlencoded({extended: false}));
 
-router.get('/add-products', (req, res, next) => {
-    console.log('In /add-products route');
-    res.sendFile(path.join(__dirname, '..', 'views', 'add-product.html'));
-});
+router.get('/add-product', adminController.getAddProductPage);
+router.get('/products', adminController.getProductPage);
 
-// limiting the request to POST only. 
-router.post('/products', (req, res, next) => {
-    console.log('In /products route');
-    console.log(req.body);
-    res.redirect('/');
-});
+
+// limiting the request to POST only.
+router.post('/products', adminController.postAddProductPage);
 
 module.exports = router;

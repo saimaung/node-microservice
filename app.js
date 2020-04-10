@@ -8,10 +8,15 @@ const express = require('express');
 // own import
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+const errorRoutes = require('./routes/error');
 const rootDir = require('./util/path');
 
 
 const app = express();
+
+// ejs templating engine
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
 // serving static files
 app.use(express.static(path.join(rootDir, 'public')));
@@ -23,12 +28,6 @@ app.use('/admin', adminRoutes);
 
 app.use(shopRoutes);
 
-// by default '/'
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(rootDir, 'views', '404.html'));
-})
-
-
-
+app.get('*', errorRoutes);
 
 app.listen(3030);
