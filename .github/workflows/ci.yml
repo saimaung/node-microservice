@@ -16,4 +16,4 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Docker Image Build
-        run: docker build . --f Dockerfile --tag saiwaimaung/restify:v0.0.1
+        run: docker build --file Dockerfile --tag saiwaimaung/restify:v0.0.1 .
