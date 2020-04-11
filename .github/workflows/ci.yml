@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: docker/build-action@v1
-        with:
-          repository: saiwaimaung/restify
-          tags: v0.0.1
+      - uses: actions/checkout@v1
+      - name: Docker Image Build
+        run: docker build . --f Dockerfile --tag saiwaimaung/restify:v0.0.1
