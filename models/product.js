@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 
 const rootDir = require('../util/path');
+const cart = require('../models/cart');
 
 const productsPath = path.join(rootDir, 'data', 'products.json');
 
@@ -25,10 +26,34 @@ module.exports = class Product {
 
     save() {
         readProductsFromFile(products => {
-            products.push(this);
-            fs.writeFile(productsPath, JSON.stringify(products), (err) => {
+            const existingProductIndex = products.findIndex(p => p.sku === this.sku);
+            const updatedProducts = [...products];
+            if (existingProductIndex != -1) {
+                updatedProducts[existingProductIndex] = this;
+            } else {
+                updatedProducts.push(this);
+            }
+            fs.writeFile(productsPath, JSON.stringify(updatedProducts), (err) => {
                 console.log(err);
             })
+        });
+    }
+
+    static delete(sku) {
+        readProductsFromFile(products => {
+            const deleteProduct = products.find(p => p.sku === sku);
+
+            const updatedProducts = products.filter(p => {
+                p.sku !== sku;
+            });
+            fs.writeFile(productsPath, JSON.stringify(updatedProducts), (err) => {
+                if (!err) {
+                    cart.delete(sku, deleteProduct.price);
+                } else {
+                    console.log('ERROR IN DELETING SKU: ' + sku);
+                    console.log(err);
+                }
+            });
         });
     }
 

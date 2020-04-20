@@ -8,6 +8,18 @@ exports.getAddProductPage = (req, res, next) => {
     })
 };
 
+exports.postAddProductPage = (req, res, next) => {
+    const title = req.body.title;
+    const sku = req.body.sku;
+    const imageUrl = req.body.imageUrl;
+    const price = req.body.price;
+    const description = req.body.description;
+    const product = new Product(title, imageUrl, description, price, sku);
+    product.save();
+    res.redirect('/');
+};
+
+
 exports.getEditProductPage = (req, res, next) => {
     const editMode = req.query.edit;
     const productSku = req.params.productSku;
@@ -21,17 +33,23 @@ exports.getEditProductPage = (req, res, next) => {
     });
 };
 
-
-exports.postAddProductPage = (req, res, next) => {
-    const title = req.body.title;
+exports.postEditProductPage = (req, res, next) => {
     const sku = req.body.sku;
-    const imageUrl = req.body.imageUrl;
     const price = req.body.price;
+    const imageUrl = req.body.imageUrl;
     const description = req.body.description;
-    const product = new Product(title, imageUrl, description, price, sku);
-    product.save();
-    res.redirect('/');
+    const title = req.body.title;
+    const updatedProduct = new Product(title, imageUrl, description, price, sku);
+    updatedProduct.save();
+    res.redirect('/admin/products');
 };
+
+exports.postDeleteProductPage = (req, res, next) => {
+    const sku = req.body.sku;
+    Product.delete(sku)
+    res.redirect('/admin/products');
+};
+
 
 exports.getProductPage = (req, res, next) => {
     Product.fetchAll((products) => {

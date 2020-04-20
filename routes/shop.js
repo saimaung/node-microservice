@@ -14,6 +14,7 @@ route.get('/products', shopController.getProductPage);
 route.get('/products/:productSku', shopController.getProductDetailsPage);
 route.get('/cart', shopController.getCartPage);
 route.post('/cart', shopController.postCartPage);
+route.post('/cart-delete-item', shopController.postDeleteCartPage);
 route.get('/orders', shopController.getOrdersPage);
 route.get('/checkout', shopController.getCheckoutPage);
 

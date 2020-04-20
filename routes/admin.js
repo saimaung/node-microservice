@@ -18,5 +18,8 @@ router.get('/products', adminController.getProductPage);
 router.post('/products/add-product', adminController.postAddProductPage);
 
 router.get('/edit-product/:productSku', adminController.getEditProductPage);
+router.post('/products/edit-product', adminController.postEditProductPage);
+router.post('/delete-product', adminController.postDeleteProductPage);
+
 
 module.exports = router;
