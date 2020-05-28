@@ -10,6 +10,9 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const errorRoutes = require('./routes/error');
 const rootDir = require('./util/path');
+const sequelize = require('./util/db');
+const Product = require('./models/product');
+const User = require('./models/user');
 
 
 const app = express();
@@ -30,4 +33,20 @@ app.use(shopRoutes);
 
 app.get('*', errorRoutes);
 
-app.listen(3030);
+Product.belongsTo(User, {
+    constraints: true,
+    onDelete: 'CASCADE'
+});
+
+sequelize
+    .sync()
+    .then(result => {
+        User.create({
+            name: 'Sai',
+            email_address: 'saiwaimaung@gmail.com'
+        });
+        app.listen(3030);
+    })
+    .catch(err => {
+        console.log(err);
+    });
