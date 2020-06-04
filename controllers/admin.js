@@ -14,8 +14,9 @@ exports.postAddProductPage = (req, res, next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    Product
-        .create({
+    req
+        .user
+        .createProduct({
             title: title,
             imageUrl: imageUrl,
             price: price,
@@ -94,14 +95,16 @@ exports.postDeleteProductPage = (req, res, next) => {
 
 
 exports.getProductPage = (req, res, next) => {
-    Product.findAll()
+    Product
+        .findAll()
         .then((products) => {
             res.render('admin/products', {
                 pageTitle: 'Admin Products',
                 path: '/admin/products',
                 products: products
             });
-        }).catch(error => {
+        })
+        .catch(error => {
             console.log(error);
         });
 };

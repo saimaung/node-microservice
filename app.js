@@ -27,6 +27,17 @@ app.use(express.static(path.join(rootDir, 'public')));
 // Add middleware functions - accept arrays of request handlers
 // next is a function
 // '/admin' filtering path
+app.use((req, res, next) => {
+    User
+        .findByPk(1)
+        .then(user => {
+            req.user = user; // storing Sequelize object
+            next();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
 app.use('/admin', adminRoutes);
 
 app.use(shopRoutes);
@@ -38,13 +49,25 @@ Product.belongsTo(User, {
     onDelete: 'CASCADE'
 });
 
+User.hasMany(Product);
+
 sequelize
-    .sync()
+    .sync({
+        force: true
+    })
     .then(result => {
-        User.create({
-            name: 'Sai',
-            email_address: 'saiwaimaung@gmail.com'
-        });
+        return User.findByPk(1);
+    })
+    .then(user => {
+        if (!user) {
+            return User.create({
+                name: 'Sai',
+                email_address: 'saiwaimaung@gmail.com'
+            });
+        }
+        return Promise.resolve(user);
+    })
+    .then(user => {
         app.listen(3030);
     })
     .catch(err => {
